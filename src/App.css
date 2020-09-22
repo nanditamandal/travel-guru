@@ -1,5 +1,21 @@
+.App div{
+  
+
+}
+
 .App {
   text-align: center;
+ 
+    background-image: url( './Image/Rectangle 1.png');
+   
+    height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+   
+    /* background-repeat: no-repeat;  */
+    
+
 }
 
 .App-logo {
