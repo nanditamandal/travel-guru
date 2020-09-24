@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import GoogleMapReact from 'google-map-react';
 import { UserContext } from '../../App';
+import './HotelDetails.css';
 
 
 
 
 
 const HotelDetails = (props) => {
-    const {name, price, image,description,offer, capacity}=props.hotel;
+    const {name, price, image,description,offer, capacity, star}=props.hotel;
     console.log(props.hotel);
     const [logInUser, setLogInUser]= useContext(UserContext);
     console.log(logInUser.email);
@@ -26,7 +27,7 @@ const HotelDetails = (props) => {
         
         <div>
         
-                        <Card style={{ width: '100%', height:'90%' }}>
+                        <Card className="hotels">
                         <Row>
                             <Col className="md-6">
                                 <Card.Img variant="top" src={image}/>
@@ -38,7 +39,7 @@ const HotelDetails = (props) => {
                                         <p>{capacity}</p>
                                         <p>{description}</p>
                                         <p>{offer}</p>
-                                        <p>{price}</p>
+                                        <p><img src="https://i.ibb.co/BKyF7nC/star-1.png" alt="star-1" border="0" height='20px'/>{star} {price}/night</p>
                                     </Card.Text>
                                     
                                 </Card.Body>

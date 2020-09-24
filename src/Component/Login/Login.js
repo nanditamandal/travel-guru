@@ -5,6 +5,8 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from "./firebaseConfig";
 import {UserContext} from '../../App';
+import { useForm } from 'react-hook-form';
+import './Login.css';
 
 
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -13,7 +15,19 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 
 
 const Login = () => {
+
+  
+  let history = useHistory();
+  let location = useLocation();
+
+ let { from } = location.state || { from: { pathname: "/" } };
+ 
     const [logInUser, setLogInUser]= useContext(UserContext);
+
+    const { register, handleSubmit, watch, errors } = useForm();
+    const onSubmit = data => console.log(data);
+  
+    console.log(watch("example")); 
 
     let provider = new firebase.auth.GoogleAuthProvider();
 
@@ -22,7 +36,15 @@ const Login = () => {
     if(firebase.apps.length === 0){
         firebase.initializeApp(firebaseConfig);
     }
-    const [userAdd,  setUserAdd]=useState(false);
+    const [activeUser,  setActiveUser]=useState(false);
+    const [error, setError]=useState({
+      fieldName:'',
+      errorMessage:'',
+      status: false
+    
+    });
+
+  
     const [fromShow,  setFromShow]=useState(true);
     const [user, setUser]=useState({
         
@@ -36,19 +58,99 @@ const Login = () => {
       
       });
 
-      let history = useHistory();
-     let location = useLocation();
-
-    let { from } = location.state || { from: { pathname: "/" } };
 
     const handelBlur=(e)=>{
-        let newUser= {...user};
-        newUser[e.target.name]=e.target.value;
-        setUser(newUser);
+        let isFormValid;
+        let pass;
+        let passNumber;
+        let password;
+        
+       
+        
+    if(e.target.name === 'email')
+    {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      isFormValid= re.test(e.target.value.toLowerCase());
+      console.log(isFormValid);
+        if(!isFormValid){
+          checkError(e.target.name,'example@gmail.com');
+          e.target.value="";
+        }
+    }
+    if(e.target.name === 'password')
+    {
+       pass =e.target.value.length>6;
+       passNumber=/\d{1}/.test(e.target.value);
+
+      isFormValid=pass && passNumber ;
+      password =e.target.value;
+      if(!isFormValid){
+        checkError(e.target.name,'length at least 7 ');
+      }
+    }
+    if(e.target.name === 'confirmPassword')
+    {
+        if(e.target.value !== user.password)
+        {
+          checkError(e.target.name,' not match');
+          console.log("not match");
+            
+        }
+        if(e.target.value === user.password)
+        {
+          isFormValid = true;
+          alert("match");
+        
+          console.log(" match");
+            
+        }
+        
+       
+       
+    }
+    if(e.target.name === 'firstName' || e.target.name === 'lastName')
+    {
+       
+      const nameLength= e.target.value.length>2;
+      const re =/^[a-zA-Z]+$/;
+      const nameType= re.test(e.target.value);
+      isFormValid= nameLength && nameType;
+      if(!isFormValid){
+        checkError(e.target.name,' length at least 3 and all characters');
+      }
+       
+      
+    }
+
+
+    if(isFormValid)
+    {
+      let newUser= {...user};
+      newUser[e.target.name]=e.target.value;
+      const errorStatus={
+        fieldName:'',
+        errorMessage: '',
+        status: false
+      }
+      setError(errorStatus);
+      setUser(newUser);
+    }
+     
+    console.log(e.target.name, e.target.value);
+
         
 
     }
-    //console.log("user", user);
+    const  checkError=(fieldName, message)=>{
+      const errorStatus={
+        fieldName:fieldName,
+        errorMessage: message,
+        status: true
+      }
+      setError(errorStatus);
+      
+    }
+
 
     const handelCreateAccount= (e)=>{
         e.preventDefault();
@@ -59,6 +161,7 @@ const Login = () => {
           let newUser=res.user;
           newUser.error ='';
           newUser.success = true;
+          setActiveUser(false);
             console.log(res);
             console.log(user);
           
@@ -80,6 +183,7 @@ const Login = () => {
     }
     const handelSignIn=(e)=>{
         e.preventDefault();
+        
         firebase.auth()
         .signInWithEmailAndPassword(user.email,user.password)
         .then(res=>{
@@ -89,12 +193,11 @@ const Login = () => {
                 email: newUser.email,
                 name: false
             }
+            
             setLogInUser(signInUser);
+          
             history.replace(from);
-            
-            
-          
-          
+        
            })
         .catch(function(error) {
           
@@ -104,15 +207,11 @@ const Login = () => {
             newUser.error=errorMessage;
             newUser.success = false;
             console.log(error);
+            alert(error);
           });
     }
-    const changeFrom=()=>{
-        console.log("login");
-        setFromShow( false );
-       // setUserAdd(true);
-
-
-    }
+    
+  
     const handelGoogleSignIn=(e)=>{
         e.preventDefault();
         firebase.auth().signInWithPopup(provider)
@@ -169,66 +268,88 @@ const Login = () => {
             console.log(error);
           });
     }
-    
-       // firebaseConfig.initializeApp(firebaseConfig);
-    console.log("email", logInUser.email,logInUser.displayName);
+
     return (
-        <div >
-            {
-               ( !fromShow) &&
-                <Form onSubmit={handelCreateAccount}>
-                <input type="text" name="firstName" id="" onBlur={handelBlur} placeholder="enter first name" required/>
-                <br/>
-                <input type="text" name="lastName" id="" onBlur={handelBlur} placeholder="enter last name" required/>
-                <br/>
-                <input type="text" name="email" id="" onBlur={handelBlur} placeholder="enter email" required/>
-                <br/>
-                <input type="password" name="password"  onBlur={handelBlur} placeholder="Enter password" required/>  <br/>
-                <input type="password" name="confirmPassword"  placeholder="enter password" required/>
-                <br/>
-                <input type="submit" value="sing up"/>
-                
-                </Form>
-}
-{
-            ( fromShow) &&
-            <Form onSubmit={handelSignIn}>
-         
-            
+        <div className='login' >
+          
+        {
+           ( !fromShow) && 
+            <Form onSubmit={handelCreateAccount}>
+              <h2>Create An Account</h2>
+            <label for="firstName" className="text-color">First Name:</label>
+            <input type="text" name="firstName" id="" onBlur={handelBlur} placeholder="enter first name" required/>
+            <br/>
+            {error.status && (error.fieldName==='firstName') && <span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+            <label for="lastName" className="text-color">Last Name:</label>
+            <input type="text" name="lastName" id="" onBlur={handelBlur} placeholder="enter last name" required/>
+            <br/>
+            {error.status && (error.fieldName==='lastName')&& <span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+            <label for="email" className="text-color">Email:</label>
             <input type="text" name="email" id="" onBlur={handelBlur} placeholder="enter email" required/>
             <br/>
+            {error.status &&(error.fieldName==='email')&&<span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+            <label for="password" className="text-color">Password:</label>
             <input type="password" name="password"  onBlur={handelBlur} placeholder="Enter password" required/>  <br/>
-            <input type="submit" value= "sign in"/>
+            {error.status && (error.fieldName==='password')&& <span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+            <label for="confirmPassword" className="text-color">Confirm Password:</label>
+            <input type="password" name="confirmPassword" onBlur={handelBlur}  placeholder="enter again password" required/>
+            <br/>
+            {error.status && (error.fieldName==='confirmPassword')&& <span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+            <input type="submit" value="Sing up"/>
             {
-                <p>Already have an Account ? <span onClick={changeFrom}><Link>Login</Link></span> </p>
-                 }
-
-            </Form>
-
-
+            <p className="text-color">Already have an Account ? <span onClick={()=>setFromShow(true)}><Link>Login</Link></span> </p>
             }
-            <button onClick ={handelGoogleSignIn}>Google sing in </button>
-            <button onClick ={handelFacebookSignIn}>Facebook sing in </button>
-            
-            
 
             
-        </div>
-            // <div>
-            //     <Form onSubmit={handelCreateAccount}>
-            //         {userAdd && <input type="text" name="firstName" id="" onBlur={handelBlur} placeholder="enter first name" required/>}
-            //         {userAdd && <input type="text" name="lastName" id="" onBlur={handelBlur} placeholder="enter last name" required/>}
+            </Form>
+}
+{
+        ( fromShow) && 
+        <Form onSubmit={handelSignIn}>
+          <h2>Log In</h2>
+     
+        <label for="email" className="text-color">Email:</label>
 
-            //         <input type="text" name="email" id="" onBlur={handelBlur} placeholder="enter email" required/>
-            //         <br/>
-            //         <input type="password" name="password"  onBlur={handelBlur} placeholder="Enter password" required/>  <br/>
-            //         <input type="submit" value="sing up"/>
-            //         {
-            //             <p>Already have an Account ? <span onClick={changeFrom}><Link>Login</Link></span> </p>
-            //         }
-                    
-            //     </Form>
-            // </div>
+        <input type="text" name="email" id="" onBlur={handelBlur} placeholder="enter email" required/>
+        <br/>
+        {error.status &&(error.fieldName==='email')&&<span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+        <label for="password" className="text-color">Password:</label>
+        <input type="password" name="password"  onBlur={handelBlur} placeholder="Enter password" required/>  <br/>
+        {error.status &&(error.fieldName==='password')&&<span className="errorMessage">{error.fieldName+" "+error.errorMessage}</span>}
+            <br/>
+        <input type="submit" value= "Sign in"/>
+        {
+            <p>New user Create Account ? <span onClick={()=>setFromShow(false)}><Link>New Account</Link></span> </p>
+        }
+      
+
+        </Form> 
+}
+       
+        
+       
+
+
+
+      <Button  className='fb-google' onClick ={handelFacebookSignIn} variant="outline-secondary" size="lg">
+            <img src='https://i.ibb.co/qW3Rfy3/fb.png' alt='fb' height='20px'/>Facebook sing in 
+      </Button>
+      <Button  className='fb-google' onClick ={handelGoogleSignIn} variant="outline-secondary" size="lg">
+      <img src="https://i.ibb.co/bQZmC5Q/google.png" alt="google" border="0"height='20px'/>Google sing in 
+      </Button>
+        
+        
+        
+
+        
+    </div>
+           
     
     );
 };

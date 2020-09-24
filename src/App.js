@@ -16,7 +16,7 @@ import NotMatch from './Component/NotMatch/NotMatch';
 import Hotel from './Component/Hotel/Hotel';
 import PrivateRoute from './Component/PrivateRoute/PrivateRoute';
 import Login from './Component/Login/Login';
-import Map from './Component/Map/Map';
+import MapDisplay from './Component/Map/MapDisplay';
 
 export const UserContext= createContext();
 
@@ -40,7 +40,7 @@ function App() {
           <Home></Home>
         </Route>
         <Route path="/map">
-          <Map></Map>
+          <MapDisplay></MapDisplay>
         </Route>
         <PrivateRoute path="/hotel/:placeName">
            <Hotel></Hotel>

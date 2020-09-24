@@ -1,0 +1,28 @@
+.ship-form{
+    margin:30px 100px;
+}
+.ship-form input{
+    display:block;margin-top:30px;
+    padding:5px;
+    border:1px solid gray;
+    border-radius:5px solid;
+    width:300px;
+}
+.errorMessage{color:red;}
+.text-color{
+    color: white;
+}
+.fb-google{
+    
+    border: 2px solid white;
+    border-radius: 50px !important;
+    height: 40px;
+
+}
+.login{
+    margin: auto;
+    width: 40%;
+    border: 0px solid;
+    padding: 10px;
+    background-color: lightgrey;
+}

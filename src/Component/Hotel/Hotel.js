@@ -6,8 +6,8 @@ import HotelDetails from '../HotelDetails/HotelDetails';
 
 import GoogleMapReact from 'google-map-react';
 import { Card, Col, Row } from 'react-bootstrap';
-import Map from 'google-map-react';
-import mapStyles from '../Map/mapStyle';
+
+import MapDisplay from '../Map/MapDisplay';
 
 const Hotel = () => {
     const {placeName}= useParams();
@@ -18,15 +18,24 @@ const Hotel = () => {
     console.log("findd hotel",hotels);
 
     const [logInUser, setLogInUser]= useContext(UserContext);
-    const location = {
-        center: {lat: 23.684994, lng: 90.356331}, 
-        zoom: 12
-     }
+    const location = [
+        {place: 'coxBazar', lat:'21.510741', lng: '92.027319'} ,
+        {place: 'sreemangal', lat:'24.3065193', lng: '91.72955030000003'} ,
+        {place: 'sundarban', lat:'24.3065193', lng: '91.72955030000003'} ,
+
+        
+    ]
+    console.log(parseFloat(location[0].lat));
+
+
+    const graph=location.filter(lo=>lo.place && lo.place.toLowerCase()=== placeName.toLowerCase());
+  
    
     return (
         <div>
             <Row>
                 <Col className="md-6">
+                    <h3 style={{color: 'white'}}>Welcome {placeName}</h3>
                     {
                         hotels.map(hotel=>
                             <HotelDetails hotel={hotel}></HotelDetails>
@@ -35,26 +44,19 @@ const Hotel = () => {
                 </Col>
 
                 <Col className="md-6">
-                {/* <div className="row w-100">
+                <div className="row w-100">
                 <div
                 className="col text-center"
                 style={{width:"100%", height:"550px"}}
                 >
-                 <Map 
-                    bootstrapURLKeys={{key:'AIzaSyCwLjkPeoh7UYK4woXbMcfaWxffTXv-yOA' }}
-                    defaultZoom={13}
-                    options={{styles: mapStyles}}
-                    defaultCenter={{
-
-                        lat: 23.684994,
-                        lng:90.356331
-                    }}
-                 
-                 />
+                    {
+                        graph.map(gh=><MapDisplay gh={gh}></MapDisplay>)
+                    }
+                
                  </div>
 
             </div>
-     */}
+    
 
                 </Col>
             </Row>
