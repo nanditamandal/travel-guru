@@ -4,8 +4,7 @@ import { UserContext } from '../../App';
 import hotelName from '../fakeData/hotelName';
 import HotelDetails from '../HotelDetails/HotelDetails';
 
-import GoogleMapReact from 'google-map-react';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import MapDisplay from '../Map/MapDisplay';
 

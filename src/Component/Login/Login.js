@@ -49,7 +49,7 @@ const Login = () => {
         
         password:'',
         error:'',
-        success: true
+        success: ''
       
       });
 
@@ -140,7 +140,8 @@ const Login = () => {
           let newUser=res.user;
           newUser.error ='';
           newUser.success = true;
-          setActiveUser(false);
+          setUser(newUser);
+         
          })
         .catch((error)=> {
           let newUser={};
@@ -162,17 +163,10 @@ const Login = () => {
         .signInWithEmailAndPassword(user.email,user.password)
         .then(res=>{
             let newUser=res.user;
-            const signInUser={
-              
-                email: newUser.email,
-                name: false
-            }
-            
-            setLogInUser(signInUser);
-          
-            history.replace(from);
-        
-           })
+            const name=false;
+            const displayName ='';
+            reDirect(displayName,  newUser.email, name, newUser);
+         })
         .catch(function(error) {
           
             let newUser={};
@@ -193,13 +187,9 @@ const Login = () => {
         .then(function(res) {
             const newUser =res.user;
             const {displayName, email}=newUser;
-            const signInUser={
-                displayName:displayName,
-                email: email,
-                name: true
-            }
-            setLogInUser(signInUser);
-            history.replace(from);
+            const name =true;
+            reDirect(displayName, email, name, newUser);
+           
         
           }).catch(function(error) {
             let newUser={};
@@ -217,18 +207,12 @@ const Login = () => {
 
         firebase.auth().signInWithPopup(fbProvider)
         .then(res=> {
-            var token = res.credential.accessToken;
-                let newUser=res.additionalUserInfo.profile;
-       
-            const signInUser={
-                displayName: newUser.name,
-                email: newUser.email,
-                name: true
-            }
-            setLogInUser(signInUser);
+            let token = res.credential.accessToken;
+            let newUser=res.additionalUserInfo.profile;
+            const name =true;
+            reDirect(newUser.name, newUser.email,name, newUser);
            
-            history.replace(from);
-        
+       
             
           }).catch(function(error) {
             let newUser={};
@@ -238,6 +222,19 @@ const Login = () => {
             newUser.success = false;
             alert(errorMessage);
           });
+    }
+    const reDirect=(displayName, email,name, newUser)=>{
+            const signInUser={
+              displayName:displayName,
+              email: email,
+              name: name
+          }
+          newUser.success = true;
+          setUser(newUser);
+
+          setLogInUser(signInUser);
+          history.replace(from);  
+
     }
 
     return (
@@ -275,6 +272,10 @@ const Login = () => {
             {
             <p className="text-color">Already have an Account ? <span onClick={()=>setFromShow(true)}><Link>Login</Link></span> </p>
             }
+                  
+            {
+              user.success && <p style={{color: "green"}}>User Create Successfully</p>
+            }
 
             
             </Form>
@@ -298,11 +299,14 @@ const Login = () => {
         {
             <p>New user Create Account ? <span onClick={()=>setFromShow(false)}><Link>New Account</Link></span> </p>
         }
+        
+       {
+         user.success && <p style={{color: "green"}}>log in Successfully</p>
+       }
       
 
         </Form> 
 }
-       
         
        
 
