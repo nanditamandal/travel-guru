@@ -24,11 +24,6 @@ const Login = () => {
  
     const [logInUser, setLogInUser]= useContext(UserContext);
 
-    const { register, handleSubmit, watch, errors } = useForm();
-    const onSubmit = data => console.log(data);
-  
-    console.log(watch("example")); 
-
     let provider = new firebase.auth.GoogleAuthProvider();
 
    
@@ -61,12 +56,7 @@ const Login = () => {
 
     const handelBlur=(e)=>{
         let isFormValid;
-        let pass;
-        let passNumber;
-        let password;
-        
        
-        
     if(e.target.name === 'email')
     {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -79,11 +69,10 @@ const Login = () => {
     }
     if(e.target.name === 'password')
     {
-       pass =e.target.value.length>6;
-       passNumber=/\d{1}/.test(e.target.value);
+       const pass =e.target.value.length>6;
+       const passNumber=/\d{1}/.test(e.target.value);
 
       isFormValid=pass && passNumber ;
-      password =e.target.value;
       if(!isFormValid){
         checkError(e.target.name,'length at least 7 ');
       }
@@ -93,20 +82,14 @@ const Login = () => {
         if(e.target.value !== user.password)
         {
           checkError(e.target.name,' not match');
-          console.log("not match");
             
         }
         if(e.target.value === user.password)
         {
           isFormValid = true;
           alert("match");
-        
-          console.log(" match");
             
-        }
-        
-       
-       
+        }   
     }
     if(e.target.name === 'firstName' || e.target.name === 'lastName')
     {
@@ -134,11 +117,7 @@ const Login = () => {
       }
       setError(errorStatus);
       setUser(newUser);
-    }
-     
-    console.log(e.target.name, e.target.value);
-
-        
+    } 
 
     }
     const  checkError=(fieldName, message)=>{
@@ -162,11 +141,6 @@ const Login = () => {
           newUser.error ='';
           newUser.success = true;
           setActiveUser(false);
-            console.log(res);
-            console.log(user);
-          
-        
-        
          })
         .catch((error)=> {
           let newUser={};
@@ -174,7 +148,7 @@ const Login = () => {
        
           newUser.error=errorMessage;
           newUser.success = false;
-          console.log(error);
+          alert(errorMessage);
           
    
      });
@@ -206,8 +180,8 @@ const Login = () => {
          
             newUser.error=errorMessage;
             newUser.success = false;
-            console.log(error);
-            alert(error);
+          
+            alert(errorMessage);
           });
     }
     
@@ -227,16 +201,13 @@ const Login = () => {
             setLogInUser(signInUser);
             history.replace(from);
         
-          
-        
-        
           }).catch(function(error) {
             let newUser={};
             var errorMessage = error.message;
          
             newUser.error=errorMessage;
             newUser.success = false;
-            console.log(error);
+            alert(errorMessage);
           });
 
     }
@@ -255,7 +226,7 @@ const Login = () => {
                 name: true
             }
             setLogInUser(signInUser);
-            console.log(res);
+           
             history.replace(from);
         
             
@@ -265,7 +236,7 @@ const Login = () => {
          
             newUser.error=errorMessage;
             newUser.success = false;
-            console.log(error);
+            alert(errorMessage);
           });
     }
 

@@ -10,11 +10,12 @@ import './Header.css';
 
 const Header = () => {
   const[logInUser, setLogInUser]= useContext(UserContext);
-    const imageStyle={
-        width: '100px',
-        height:' 80px',
-        marginLeft: '40px'
-    }
+    // const imageStyle={
+    //     width: '100px',
+    //     height:' 80px',
+    //     marginLeft: '40px',
+    //     filter: 'grayscale(10)'
+    // }
     const handelLogOut=()=>{
         setLogInUser({
           
@@ -26,7 +27,7 @@ const Header = () => {
       <Container fluid>
           <Navbar bg="" expand="lg">
           <Navbar.Brand >
-              <img src={logo} alt="logo" style={imageStyle}/>
+              <img src={logo} className="img"alt="logo" />
           </Navbar.Brand>
           <Form inline>
               <FormControl type="text" placeholder="Search" className="mr-sm-5" />

@@ -7,3 +7,11 @@
 .link{
     color:white !important;
 }
+.img{
+      
+    width: 100px;
+    height: 80px;
+    margin-left: 40px;
+    fill: white;
+    
+}
