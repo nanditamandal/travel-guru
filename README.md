@@ -1,6 +1,6 @@
 **Live Website** [travel guru](https://travel-guru-e9437.web.app/){target="_blank"}
 
-[**My Resume**](https://drive.google.com/file/d/1SKPtRZH-LAxhCUD_dSV-vZYMkoYyDo1U/view?usp=sharing target="_blank")
+[**My Resume**](https://drive.google.com/file/d/1SKPtRZH-LAxhCUD_dSV-vZYMkoYyDo1U/view?usp=sharingtarget="_blank")
 
 **Features**
 -	User can select any place from the home page and go to the booking page and place and set a time. 
