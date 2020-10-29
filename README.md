@@ -1,4 +1,4 @@
-**Live Website** [travel guru](https://travel-guru-e9437.web.app/){target="_blank"}
+**Live Website** [travel guru](https://travel-guru-e9437.web.app/){:target="_blank"}
 
 [**My Resume**](https://drive.google.com/file/d/1SKPtRZH-LAxhCUD_dSV-vZYMkoYyDo1U/view?usp=sharingtarget="_blank")
 
